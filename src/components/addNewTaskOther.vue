@@ -31,9 +31,10 @@
         <!--</el-col>-->
       <!--</el-form-item>-->
       <el-form-item label="预计完成" prop="date2">
-        <el-col>
-          <el-date-picker style="width: 100%" type="datetime" v-bind:disabled="isDisabled" :picker-options="pickerOptions0" format="yyyy-MM-dd HH:mm:ss" value-format="yyyy-MM-dd HH:mm:ss" placeholder="选择完成日期" v-model="taskForm.date2"></el-date-picker>
-        </el-col>
+        <div class="selectData" @click="selectProjectStartData">{{taskForm.date2}}</div>
+        <!--<el-col>-->
+          <!--<el-date-picker style="width: 100%" type="datetime" v-bind:disabled="isDisabled" :picker-options="pickerOptions0" format="yyyy-MM-dd HH:mm:ss" value-format="yyyy-MM-dd HH:mm:ss" placeholder="选择完成日期" v-model="taskForm.date2"></el-date-picker>-->
+        <!--</el-col>-->
       </el-form-item>
       <el-form-item label="问题描述" prop="description" maxlength="100" width="100">
         <el-input class="planNameIpt" v-bind:disabled="isDisabled" type="textarea" :rows="4" v-model="taskForm.description" placeholder="请输入问题详情"></el-input>
@@ -64,6 +65,9 @@ export default {
       formId: '',
       upLoadName: '',
       loading: false,
+      nowMinte: '',
+      startTimeNow: '',
+      startDateTime: '',
       taskForm: {
         jobName: '',
         userName: '',
@@ -135,8 +139,48 @@ export default {
         }
       })
     }
+    this.getNowDataTime()
   },
   methods: {
+    getNowDataTime: function () {
+      var that = this
+      var starTime = new Date()
+      var staryear = starTime.getFullYear()
+      var starmonth = (starTime.getMonth() + 1) < 10 ? '0' + (starTime.getMonth() + 1) : (starTime.getMonth() + 1)
+      var starday = starTime.getDate() < 10 ? '0' + starTime.getDate() : starTime.getDate()
+      var starHours = starTime.getHours() < 10 ? '0' + starTime.getHours() : starTime.getHours()
+      var starMinut = starTime.getMinutes() < 10 ? '0' + starTime.getMinutes() : starTime.getMinutes()
+      // var daySecond = nowEndData.getSeconds() < 10 ? '0' + nowEndData.getSeconds() : nowEndData.getSeconds()
+      var nStar = Math.ceil(starMinut / 10)
+      var ceilMintStar = nStar * 10
+      if (ceilMintStar === 60) {
+        ceilMintStar = '00'
+        starHours = starHours + 1
+      }
+      that.startTimeNow = staryear + '-' + starmonth + '-' + starday + ' ' + starHours + ':' + ceilMintStar
+      var startDay = staryear + '-' + starmonth + '-' + starday
+      that.nowMinte = staryear + '-' + starmonth + '-' + starday + ' ' + starHours + ':' + starMinut
+      that.startDateTime = startDay
+      that.taskForm.date2 = that.startTimeNow
+      // var getTime = new Date().getTime()
+      // var addTime = 24 * 60 * 60 * 30 * 3 * 1000
+      // var endTime = getTime + addTime
+      // var nowEndData = new Date(endTime)
+      // var yearEnd = nowEndData.getFullYear()
+      // var monthEnd = (nowEndData.getMonth() + 1) < 10 ? '0' + (nowEndData.getMonth() + 1) : (nowEndData.getMonth() + 1)
+      // var dayEnd = nowEndData.getDate() < 10 ? '0' + nowEndData.getDate() : nowEndData.getDate()
+      // var dayHours = nowEndData.getHours() < 10 ? '0' + nowEndData.getHours() : nowEndData.getHours()
+      // var dayMinte = nowEndData.getMinutes() < 10 ? '0' + nowEndData.getMinutes() : nowEndData.getMinutes()
+      // // var daySecond = nowEndData.getSeconds() < 10 ? '0' + nowEndData.getSeconds() : nowEndData.getSeconds()
+      // var n = Math.ceil(dayMinte / 10)
+      // var ceilMint = n * 10
+      // if (ceilMint === 60) {
+      //   ceilMint = '00'
+      //   dayHours = dayHours + 1
+      // }
+      // var lastTime = yearEnd + '-' + monthEnd + '-' + dayEnd + ' ' + dayHours + ':' + ceilMint
+      // that.ruleForm.value2 = lastTime
+    },
     rateChange: function (rateval) {
       this.addTaskPayload.jobLevel = rateval
     },
@@ -172,6 +216,42 @@ export default {
       this.addTaskPayload.userNameTransfer = item.value
       console.log(item.userId)
       console.log(this.addTaskPayload)
+    },
+    selectProjectStartData: function () {
+      var that = this
+      that.$vux.datetime.show({
+        cancelText: '取消',
+        confirmText: '确定',
+        value: that.taskForm.date2,
+        format: 'YYYY-MM-DD HH:mm',
+        startDate: that.startDateTime,
+        minuteList: ['00', '10', '20', '30', '40', '50'],
+        onConfirm (val) {
+          console.log('plugin confirm', val)
+          var nowBinTime = new Date().getTime()
+          var getSelectTime = new Date(val.replace(/-/g, '/')).getTime()
+          if (getSelectTime < nowBinTime) {
+            that.$message.warning('时间应大于当前时间')
+            that.taskForm.date2 = that.startTimeNow
+          } else {
+            that.taskForm.date2 = val
+          }
+          // that.year = val.split('-')[0]
+          // that.month = val.split('-')[1]
+          // var getTime = new Date(that.ruleForm.value1.replace(/-/g, '/')).getTime()
+          // var addTime = 24 * 60 * 60 * 30 * 3 * 1000
+          // var endTime = getTime + addTime
+          // var nowEndData = new Date(endTime)
+          // var yearEnd = nowEndData.getFullYear()
+          // var monthEnd = (nowEndData.getMonth() + 1) < 10 ? '0' + (nowEndData.getMonth() + 1) : (nowEndData.getMonth() + 1)
+          // var dayEnd = nowEndData.getDate() < 10 ? '0' + nowEndData.getDate() : nowEndData.getDate()
+          // var dayHours = nowEndData.getHours() < 10 ? '0' + nowEndData.getHours() : nowEndData.getHours()
+          // var dayMinte = nowEndData.getMinutes() < 10 ? '0' + nowEndData.getMinutes() : nowEndData.getMinutes()
+          // // var daySecond = nowEndData.getSeconds() < 10 ? '0' + nowEndData.getSeconds() : nowEndData.getSeconds()
+          // var lastTime = yearEnd + '-' + monthEnd + '-' + dayEnd + ' ' + dayHours + ':' + dayMinte
+          // that.ruleForm.value2 = lastTime
+        }
+      })
     },
     onTaskSubmit: function (taskForm) {
       var that = this
@@ -286,5 +366,23 @@ export default {
 </script>
 
 <style scoped>
-
+  .selectData {
+    -webkit-appearance: none;
+    background-color: #fff;
+    background-image: none;
+    border-radius: 4px;
+    border: 1px solid #dcdfe6;
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+    color: #606266;
+    display: inline-block;
+    font-size: inherit;
+    height: 40px;
+    line-height: 40px;
+    outline: 0;
+    padding: 0 15px;
+    -webkit-transition: border-color .2s cubic-bezier(.645,.045,.355,1);
+    transition: border-color .2s cubic-bezier(.645,.045,.355,1);
+    width: 100%;
+  }
 </style>
