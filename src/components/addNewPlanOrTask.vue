@@ -456,6 +456,7 @@ export default {
               that.$message.success('添加成功')
               that.form.name = ''
               that.form.description = ''
+              that.$router.push('/projectDetailPage/' + that.projectUID)
             } else {
               that.loading = false
             }
@@ -510,6 +511,7 @@ export default {
                 that.taskForm.description = ''
                 // that.formDataClear()
                 // that.queryManagePlan5()
+                that.$router.push('/projectDetailPage/' + that.projectUID)
               } else {
                 that.delayfuc()
               }

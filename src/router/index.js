@@ -13,6 +13,9 @@ import taskDetailPage from '@/components/taskDetailPage'
 import decompositionTask from '@/components/decompositionTask'
 import addNewModelProject from '@/components/addNewModelProject'
 import addNewPlanOrTask from '@/components/addNewPlanOrTask'
+import antherQuestionDetail from '@/components/antherQuestionDetail'
+import addTaskOtherList from '@/components/addTaskOtherList'
+import addNewTaskOther from '@/components/addNewTaskOther'
 
 Vue.use(Router)
 
@@ -82,6 +85,21 @@ export default new Router({
       path: '/addNewPlanOrTask',
       name: 'addNewPlanOrTask',
       component: addNewPlanOrTask
+    },
+    {
+      path: '/antherQuestionDetail',
+      name: 'antherQuestionDetail',
+      component: antherQuestionDetail
+    },
+    {
+      path: '/addTaskOtherList',
+      name: 'addTaskOtherList',
+      component: addTaskOtherList
+    },
+    {
+      path: '/addNewTaskOther',
+      name: 'addNewTaskOther',
+      component: addNewTaskOther
     }
   ]
 })

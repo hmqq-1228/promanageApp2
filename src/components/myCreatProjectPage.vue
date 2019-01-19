@@ -32,7 +32,7 @@
     <div class="devide">我发起的
       <div class="paiXu">排序:<span data-num="1" @click="orderTask($event)">按时间</span>&nbsp;<span data-num="2" @click="orderTask($event)">按等级</span></div>
     </div>
-    <div class="taskBox">
+    <div class="taskBox" v-loading="taskLoading">
       <div class="noData" v-if="taskListMsg.length === 0">暂无数据~</div>
       <div class="taskItem" v-if="taskListMsg.length > 0" v-for="(taskItem, index) in taskListMsg" v-bind:key="index" @click="toTaskDetailPage(taskItem.uid)">
         <div class="taskLf">
@@ -67,6 +67,7 @@ export default {
       value: '',
       stateNum: '',
       pNum: 1,
+      taskLoading: false,
       notMore: false,
       taskListMsg: [],
       taskListTotal: '',
@@ -120,6 +121,7 @@ export default {
     },
     getTaskDetail: function (type) {
       var that = this
+      that.taskLoading = true
       that.ajax('/app/myLaunchTaskView', that.taskListData).then(res => {
         // console.log('myTaskView:', res)
         if (res.code === 200) {
@@ -134,6 +136,7 @@ export default {
             that.notMore = true
           }
         }
+        that.taskLoading = false
       })
     },
     addMoreHistory: function () {
@@ -192,6 +195,9 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
+  .taskRt .vux-x-icon {
+    fill: #666;
+  }
   .stateBox{
     width: 100%;
     display: flex;

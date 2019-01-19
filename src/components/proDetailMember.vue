@@ -101,6 +101,7 @@ export default {
     }
   },
   created: function () {
+    this.$store.commit('currentTabSet', 'ProDetailMember')
     this.getProjectPeo()
     this.settoken()
   },

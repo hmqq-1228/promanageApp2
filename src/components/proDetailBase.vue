@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="proDetailBase">
     <!--<div>这个是NewAddBase</div>-->
     <div>{{getUserId?'':''}}</div>
     <div class="projectBase" v-loading="loading">
@@ -7,6 +7,7 @@
         <el-form-item label="项目名称" prop="projectName">
           <el-input v-model="ruleForm.projectName" v-bind:disabled="bindEdit"></el-input>
         </el-form-item>
+        <!--<div><input type="text" style="line-height: 26px; color: red;" disabled="disabled" value="这个是测试"/> </div>-->
         <el-form-item label="项目类型" prop="projectType">
           <!--<el-input v-model="ruleForm.projectType"></el-input>-->
           <el-select v-model="ruleForm.projectType" placeholder="请选择项目类型" v-bind:disabled="bindEdit">
@@ -18,11 +19,11 @@
           </el-select>
         </el-form-item>
         <el-form-item label="开始时间" prop="value1">
-          <div class="selectData" @click="selectProjectStartData" v-bind:disabled="bindEdit">{{ruleForm.value1}}</div>
+          <div class="selectData" v-bind:class="bindEdit?'disabled':''" @click="selectProjectStartData">{{ruleForm.value1}}</div>
           <!--<el-input v-model="ruleForm.value1" placeholder="请选择项目开始时间" @focus="selectProjectStartData" v-bind:disabled="bindEdit"></el-input>-->
         </el-form-item>
         <el-form-item label="结束时间" prop="value2">
-          <div class="selectData" @click="selectProjectEndData" v-bind:disabled="bindEdit">{{ruleForm.value2}}</div>
+          <div class="selectData" v-bind:class="bindEdit?'disabled':''" @click="selectProjectEndData">{{ruleForm.value2}}</div>
           <!--<el-input v-model="ruleForm.value2" placeholder="请选择项目结束时间" @focus="selectProjectEndData" v-bind:disabled="bindEdit"></el-input>-->
         </el-form-item>
         <el-form-item label="项目负责人" prop="projectManager">
@@ -45,18 +46,15 @@
               <i style="font-weight: bold !important; padding: 5px; color: chocolate;" class="el-icon-download"></i>
             </a>
           </div>
-          <!--<div style="color:#409EFF" v-on:click="downFuc($event)" v-bind:data-showname="ruleForm.showName" v-bind:data-realurl="ruleForm.realUrl">-->
-          <!--{{ruleForm.showName}}<i style="font-weight: bold; padding: 5px;" class="el-icon-download"></i>-->
-          <!--</div>-->
         </el-form-item>
-        <el-form-item label="项目附件" style="height: 40px;">
-          <form id="myPlanForm" enctype="multipart/form-data" v-if="!ruleForm.showName">
-            <input type="file" id="myfile" name="myfile" placeholder="请选择文件" v-bind:disabled="bindEdit" style="width: 200px;"/>
-            <input type="hidden" name="formId" v-bind:value="projectUID">
-            <!--<el-button style="background-color: #409EFF;color: #fff;border: none;border-radius: 4px;padding: 4px;" @click="uploadFileMsg()">立即上传</el-button>-->
-            <div style="padding-left: 70px;font-size: 12px;height: 16px;color: #409eff">{{upLoadName}}</div>
-          </form>
-        </el-form-item>
+        <!--<el-form-item label="项目附件" style="height: 40px;">-->
+          <!--<form id="myPlanForm" enctype="multipart/form-data" v-if="!ruleForm.showName">-->
+            <!--<input type="file" id="myfile" name="myfile" placeholder="请选择文件" v-bind:disabled="bindEdit" style="width: 200px;"/>-->
+            <!--<input type="hidden" name="formId" v-bind:value="projectUID">-->
+            <!--&lt;!&ndash;<el-button style="background-color: #409EFF;color: #fff;border: none;border-radius: 4px;padding: 4px;" @click="uploadFileMsg()">立即上传</el-button>&ndash;&gt;-->
+            <!--<div style="padding-left: 70px;font-size: 12px;height: 16px;color: #409eff">{{upLoadName}}</div>-->
+          <!--</form>-->
+        <!--</el-form-item>-->
         <div style="text-align: center">
           <el-button style="width: 50%;" type="primary" v-if="btnShow" @click="updateProjectMsg">修改</el-button>
           <!--<div v-if="btnShow" style="text-align: center;width: 80%;margin: 50px auto">-->
@@ -134,6 +132,7 @@ export default {
   },
   created () {
     this.$store.commit('isTabShow', false)
+    this.$store.commit('currentTabSet', 'ProDetailBase')
     this.settoken()
     // 设置钉钉的标题
     if (dd.version) {
@@ -174,62 +173,67 @@ export default {
     },
     selectProjectStartData: function () {
       var that = this
-      that.$vux.datetime.show({
-        cancelText: '取消',
-        confirmText: '确定',
-        value: that.ruleForm.value1,
-        format: 'YYYY-MM-DD',
-        endDate: that.ruleForm.value1,
-        // minuteList: ['00', '10', '20', '30', '40', '50'],
-        onConfirm (val) {
-          console.log('plugin confirm', val)
-          that.ruleForm.value1 = val
-          // var nowBinTime = new Date(that.nowMinte.replace(/-/g, '/')).getTime()
-          // var getSelectTime = new Date(val.replace(/-/g, '/')).getTime()
-          // if (getSelectTime < nowBinTime) {
-          //   that.$message.warning('时间应大于当前时间')
-          //   that.ruleForm.value1 = that.startTimeNow
-          // } else {
-          //   that.ruleForm.value1 = val
-          // }
-          // var getTime = new Date(that.ruleForm.value1.replace(/-/g, '/')).getTime()
-          // var addTime = 24 * 60 * 60 * 30 * 3 * 1000
-          // var endTime = getTime + addTime
-          // var nowEndData = new Date(endTime)
-          // var yearEnd = nowEndData.getFullYear()
-          // var monthEnd = (nowEndData.getMonth() + 1) < 10 ? '0' + (nowEndData.getMonth() + 1) : (nowEndData.getMonth() + 1)
-          // var dayEnd = nowEndData.getDate() < 10 ? '0' + nowEndData.getDate() : nowEndData.getDate()
-          // var dayHours = nowEndData.getHours() < 10 ? '0' + nowEndData.getHours() : nowEndData.getHours()
-          // var dayMinte = nowEndData.getMinutes() < 10 ? '0' + nowEndData.getMinutes() : nowEndData.getMinutes()
-          // // var daySecond = nowEndData.getSeconds() < 10 ? '0' + nowEndData.getSeconds() : nowEndData.getSeconds()
-          // var lastTime = yearEnd + '-' + monthEnd + '-' + dayEnd + ' ' + dayHours + ':' + dayMinte
-          // that.ruleForm.value2 = lastTime
-        }
-      })
+      // this.alert('bindEdit:' + that.bindEdit)
+      if (!that.bindEdit) {
+        that.$vux.datetime.show({
+          cancelText: '取消',
+          confirmText: '确定',
+          value: that.ruleForm.value1,
+          format: 'YYYY-MM-DD',
+          endDate: that.ruleForm.value1,
+          // minuteList: ['00', '10', '20', '30', '40', '50'],
+          onConfirm (val) {
+            console.log('plugin confirm', val)
+            that.ruleForm.value1 = val
+            // var nowBinTime = new Date(that.nowMinte.replace(/-/g, '/')).getTime()
+            // var getSelectTime = new Date(val.replace(/-/g, '/')).getTime()
+            // if (getSelectTime < nowBinTime) {
+            //   that.$message.warning('时间应大于当前时间')
+            //   that.ruleForm.value1 = that.startTimeNow
+            // } else {
+            //   that.ruleForm.value1 = val
+            // }
+            // var getTime = new Date(that.ruleForm.value1.replace(/-/g, '/')).getTime()
+            // var addTime = 24 * 60 * 60 * 30 * 3 * 1000
+            // var endTime = getTime + addTime
+            // var nowEndData = new Date(endTime)
+            // var yearEnd = nowEndData.getFullYear()
+            // var monthEnd = (nowEndData.getMonth() + 1) < 10 ? '0' + (nowEndData.getMonth() + 1) : (nowEndData.getMonth() + 1)
+            // var dayEnd = nowEndData.getDate() < 10 ? '0' + nowEndData.getDate() : nowEndData.getDate()
+            // var dayHours = nowEndData.getHours() < 10 ? '0' + nowEndData.getHours() : nowEndData.getHours()
+            // var dayMinte = nowEndData.getMinutes() < 10 ? '0' + nowEndData.getMinutes() : nowEndData.getMinutes()
+            // // var daySecond = nowEndData.getSeconds() < 10 ? '0' + nowEndData.getSeconds() : nowEndData.getSeconds()
+            // var lastTime = yearEnd + '-' + monthEnd + '-' + dayEnd + ' ' + dayHours + ':' + dayMinte
+            // that.ruleForm.value2 = lastTime
+          }
+        })
+      }
     },
     selectProjectEndData: function () {
       var that = this
-      that.$vux.datetime.show({
-        cancelText: '取消',
-        confirmText: '确定',
-        value: that.ruleForm.value2,
-        format: 'YYYY-MM-DD',
-        startDate: that.ruleForm.value2,
-        // minuteList: ['00', '10', '20', '30', '40', '50'],
-        onConfirm (val) {
-          console.log('plugin confirm', val)
-          that.ruleForm.value2 = val
-          // var nowBinTime = new Date(that.ruleForm.value1.replace(/-/g, '/')).getTime()
-          // var getSelectTime = new Date(val.replace(/-/g, '/')).getTime()
-          // console.log(nowBinTime, getSelectTime)
-          // if (getSelectTime < nowBinTime) {
-          //   that.$message.warning('结束时间应大于开始时间')
-          //   that.ruleForm.value2 = that.ruleForm.value1
-          // } else {
-          //   that.ruleForm.value2 = val
-          // }
-        }
-      })
+      if (!that.bindEdit) {
+        that.$vux.datetime.show({
+          cancelText: '取消',
+          confirmText: '确定',
+          value: that.ruleForm.value2,
+          format: 'YYYY-MM-DD',
+          startDate: that.ruleForm.value2,
+          // minuteList: ['00', '10', '20', '30', '40', '50'],
+          onConfirm (val) {
+            console.log('plugin confirm', val)
+            that.ruleForm.value2 = val
+            // var nowBinTime = new Date(that.ruleForm.value1.replace(/-/g, '/')).getTime()
+            // var getSelectTime = new Date(val.replace(/-/g, '/')).getTime()
+            // console.log(nowBinTime, getSelectTime)
+            // if (getSelectTime < nowBinTime) {
+            //   that.$message.warning('结束时间应大于开始时间')
+            //   that.ruleForm.value2 = that.ruleForm.value1
+            // } else {
+            //   that.ruleForm.value2 = val
+            // }
+          }
+        })
+      }
     },
     // 查询基本信息
     getProMsg () {

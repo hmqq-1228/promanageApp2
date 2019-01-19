@@ -5,15 +5,23 @@
   <div class="modelFinished" v-if="isShowFinished">
     <form id="uploadFileFinish" enctype="multipart/form-data">
       <div class="modelFinishedCon" v-loading="loading">
-        <label><span style="color: red">*</span> 完成备注：</label>
-        <textarea name="remark" id="myremark"></textarea>
-        <label>上传附件：</label>
-        <input type="file" id="myfileFinish" name="myfile" value="">
-        <input type="hidden" name="taskId" v-bind:value="taskId">
-        <input type="hidden" name="userId" v-bind:value="userId">
+        <div>
+          <label><span style="color: red">*</span> 完成备注：</label>
+        </div>
+        <div>
+          <textarea name="remark" id="myremark">已完成</textarea>
+        </div>
+        <div style="margin-top: 10px;"><label>上传附件：</label></div>
+        <div>
+          <input type="file" id="myfileFinish" name="myfile" value="">
+          <input type="hidden" name="taskId" v-bind:value="taskId">
+          <input type="hidden" name="userId" v-bind:value="userId">
+        </div>
         <div style="text-align: center;margin-top: 16px;">
-          <a class="cancel" type="button" @click="cancelUpload()">关闭</a>
-          <a class="upload" type="button" @click="confirmUpload()">提交</a>
+          <x-button mini action-type="button" @click.native="cancelUpload()">关闭</x-button>
+          <x-button mini action-type="button" type="primary" @click.native="confirmUpload()">提交</x-button>
+          <!--<a class="cancel" type="button" @click="cancelUpload()">关闭</a>-->
+          <!--<a class="upload" type="button" @click="confirmUpload()">提交</a>-->
         </div>
       </div>
     </form>
@@ -22,43 +30,53 @@
   <div class="modelFinished" v-if="isShowComment">
     <form id="uploadFileComment" enctype="multipart/form-data">
       <div class="modelFinishedCon" v-loading="cloading">
-        <label><span style="color: red">*</span> 评论：</label>
-        <textarea name="content" id="myremarkComment" v-model="commentTextarea"></textarea>
-        <label>上传附件：</label>
-        <input type="file" id="myfileComment" name="myfile" value="">
-        <input type="hidden" name="rid" v-bind:value="taskId">
-        <input type="hidden" name="rtype" v-bind:value="3">
-        <input type="hidden" name="userId" v-bind:value="userId">
+        <div><label><span style="color: red">*</span> 评论：</label></div>
+        <div><textarea name="content" id="myremarkComment" v-model="commentTextarea"></textarea></div>
+        <div style="margin-top: 10px;"><label>上传附件：</label></div>
+        <div>
+          <input type="file" id="myfileComment" name="myfile" value="">
+          <input type="hidden" name="rid" v-bind:value="taskId">
+          <input type="hidden" name="rtype" v-bind:value="3">
+          <input type="hidden" name="userId" v-bind:value="userId">
+        </div>
         <div style="text-align: center;margin-top: 16px;">
-          <a class="cancel" type="button" @click="cancelComment()">关闭</a>
-          <a class="upload" type="button" @click="confirmComment()">提交</a>
+          <x-button mini action-type="button" @click.native="cancelComment()">关闭</x-button>
+          <x-button mini action-type="button" type="primary" @click.native="confirmComment()">提交</x-button>
+          <!--<a class="cancel" type="button" @click="cancelComment()">关闭</a>-->
+          <!--<a class="upload" type="button" @click="confirmComment()">提交</a>-->
         </div>
       </div>
     </form>
   </div>
   <!--移交-->
   <div class="modelFinished" v-if="isShowTurnOver">
-      <div style="height: 320px" class="modelFinishedCon" v-loading="tloading">
-        <label><span style="color: red">*</span> 任务移交人：</label>
-        <el-autocomplete style="width: 90%;margin: 10px 5%"
-           v-model="projectManager"
-           :fetch-suggestions="querySearchAsync"
-           placeholder="请输入移交人姓名"
-           :trigger-on-focus="false"
-           @select="handleSelect"
-        ></el-autocomplete>
+      <div class="modelFinishedCon turnOver" v-loading="tloading">
+        <div><label><span style="color: red">*</span> 任务移交人：</label></div>
+        <div>
+          <el-autocomplete style="width: 90%;margin: 10px 5%"
+                           v-model="projectManager"
+                           :fetch-suggestions="querySearchAsync"
+                           placeholder="请输入移交人姓名"
+                           :trigger-on-focus="false"
+                           @select="handleSelect">
+          </el-autocomplete>
+        </div>
         <form id="uploadFileTurnOver" enctype="multipart/form-data">
-          <label><span style="color: red">*</span> 移交备注：</label>
-          <textarea name="remark" id="myremarkTurnOver"></textarea>
-          <label>上传附件：</label>
-          <input type="file" id="myfileTurnOver" name="myfile" value="">
-          <input type="hidden" name="taskId" v-bind:value="taskId">
-          <input type="hidden" name="userId" v-bind:value="userId">
-          <input type="hidden" name="transferUserId" v-bind:value="transferUserId">
-          <input type="hidden" name="transferUserName" v-bind:value="transferUserName">
+          <div><label><span style="color: red">*</span> 移交备注：</label></div>
+          <div><textarea name="remark" id="myremarkTurnOver"></textarea></div>
+          <div style="margin-top: 10px;"><label>上传附件：</label></div>
+          <div>
+            <input type="file" id="myfileTurnOver" name="myfile" value="">
+            <input type="hidden" name="taskId" v-bind:value="taskId">
+            <input type="hidden" name="userId" v-bind:value="userId">
+            <input type="hidden" name="transferUserId" v-bind:value="transferUserId">
+            <input type="hidden" name="transferUserName" v-bind:value="transferUserName">
+          </div>
           <div style="text-align: center;margin-top: 16px;">
-            <a class="cancel" type="button" @click="cancelTurnOver()">关闭</a>
-            <a class="upload" type="button" @click="confirmTurnOver()">移交</a>
+            <x-button mini action-type="button" @click.native="cancelTurnOver()">关闭</x-button>
+            <x-button mini action-type="button" type="primary" @click.native="confirmTurnOver()">移交</x-button>
+            <!--<a class="cancel" type="button" @click="cancelTurnOver()">关闭</a>-->
+            <!--<a class="upload" type="button" @click="confirmTurnOver()">移交</a>-->
           </div>
         </form>
       </div>
@@ -869,18 +887,21 @@ export default {
     background-color: #0e78c7;
   }
   .modelFinishedCon{
-    height: 250px;
+    _height: 250px;
     width: 80%;
     font-family: '黑体';
     background-color: #fff;
     position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    margin: auto;
+    top: 50%;
+    left: 10%;
+    border-radius: 6px;
+    box-sizing: border-box;
+    margin-top: -160px;
     z-index: 9999;
-    padding: 10px;
+    padding: 20px;
+  }
+  .modelFinishedCon.turnOver{
+    margin-top: -190px;
   }
   .modelFinishedCon label{
     color: #666;

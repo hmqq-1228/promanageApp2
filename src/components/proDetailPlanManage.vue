@@ -224,6 +224,7 @@ export default {
     // console.log('TreeTest5-created')
     // var pid = that.$route.params.pid || that.proID
     // this.$store.commit('setRouterName', {name: '项目计划管理', parentName: 'proDetails', url: '/proDetails/' + pid})
+    this.$store.commit('currentTabSet', 'ProDetailPlanManage')
     this.queryManagePlan5()
     this.settoken()
   },
@@ -274,9 +275,9 @@ export default {
           var n = Math.ceil(Minutenow / 10)
           var MinutenowF = n * 10
           // 开始时间戳
-          var parentStar = new Date(res.data.taskStartDate.replace(/-/g, '/')).getTime()
+          var parentStar = new Date(res.data.parentSTime.replace(/-/g, '/')).getTime()
           // 结束时间
-          var parentEnd = new Date(res.data.taskFinishDate.replace(/-/g, '/'))
+          var parentEnd = new Date(res.data.parentETime.replace(/-/g, '/'))
           var yearE = parentEnd.getFullYear()
           var monthE = (parentEnd.getMonth() + 1) < 10 ? '0' + (parentEnd.getMonth() + 1) : (parentEnd.getMonth() + 1)
           var dayE = parentEnd.getDate() < 10 ? '0' + parentEnd.getDate() : parentEnd.getDate()
@@ -536,9 +537,9 @@ export default {
           var n = Math.ceil(Minutenow / 10)
           var MinutenowF = n * 10
           // 开始时间戳
-          var parentStar = new Date(res.msg.start.replace(/-/g, '/')).getTime()
+          var parentStar = new Date(res.msg.parentSTime.replace(/-/g, '/')).getTime()
           // 结束时间
-          var parentEnd = new Date(res.msg.finish.replace(/-/g, '/'))
+          var parentEnd = new Date(res.msg.parentETime.replace(/-/g, '/'))
           var yearE = parentEnd.getFullYear()
           var monthE = (parentEnd.getMonth() + 1) < 10 ? '0' + (parentEnd.getMonth() + 1) : (parentEnd.getMonth() + 1)
           var dayE = parentEnd.getDate() < 10 ? '0' + parentEnd.getDate() : parentEnd.getDate()

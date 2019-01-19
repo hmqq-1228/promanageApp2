@@ -9,7 +9,8 @@
               top="0px"
               @keyup.native="search(value)"
               @on-cancel="cancelSearch"
-              ref="search"></search>
+              ref="search">
+      </search>
       <group gutter="44px">
         <div class="addNewPro" @click="toAddNewProject()"><img src="../../static/img/newaddicon.png" alt=""></div>
         <div class="stateBox">
@@ -37,6 +38,7 @@
         @on-click-menu="click">
       </actionsheet>
       <div class="projectBox" v-loading="delLoading">
+        <div class="noData" v-if="projectViewData.length === 0">暂无数据~</div>
         <swipeout>
           <swipeout-item transition-mode="follow" v-for="(project, index) in projectViewData" v-bind:key="index">
             <div slot="right-menu" v-if="project.isDelProject">
@@ -134,6 +136,9 @@ export default {
     this.$store.commit('isTabShow', true)
     if (!this.$store.state.userId) {
       this.$store.commit('ddLogin', {recallback: 'false', ddgetcfg: ''})
+    } else {
+      this.log(11111111)
+      // this.getAllProjectList()
     }
     // 设置钉钉的标题
     if (dd.version) {
@@ -148,24 +153,34 @@ export default {
       })
     }
     this.settoken()
-    this.getAllProjectList()
+    // this.getAllProjectList()
   },
   computed: {
     getLoginData: function () {
+      this.log(999999)
       var that = this
-      if (this.$store.state.loginData.data) {
-        that.userId = this.$store.state.loginData.data.ID
-        that.myProjectViewPayload.userId = that.$store.state.loginData.data.ID
-        that.getAllProjectList()
-        console.log('钉钉环境userId:', that.$store.state.userId)
-        return this.$store.state.loginData.data.ID
-      } else {
+      // if (this.$store.state.loginData.data) {
+      //   that.userId = this.$store.state.loginData.data.ID
+      //   that.myProjectViewPayload.userId = that.$store.state.loginData.data.ID
+      //   that.getAllProjectList()
+      //   console.log('钉钉环境userId:', that.$store.state.userId)
+      //   return this.$store.state.loginData.data.ID
+      // } else {
+      //   this.log('loginData:', this.$store.state.loginData)
+      //   that.userId = that.$store.state.userId
+      //   that.myProjectViewPayload.userId = that.$store.state.userId
+      //   // that.getAllProjectList()
+      //   console.log('非钉钉环境userId:', that.$store.state.userId)
+      //   return '空'
+      // }
+      if (this.$store.state.userId) {
         that.userId = that.$store.state.userId
         that.myProjectViewPayload.userId = that.$store.state.userId
         that.getAllProjectList()
-        console.log('非钉钉环境userId:', that.$store.state.userId)
-        return '空'
+      } else {
+        this.$store.commit('ddLogin', {recallback: 'false', ddgetcfg: ''})
       }
+      return this.$store.state.userId
       // return this.$store.state.loginData.data
     }
   },
@@ -177,9 +192,9 @@ export default {
     },
     getAllProjectList: function () {
       var that = this
-      that.loading = true
+      that.delLoading = true
       that.ajax('/app/myProjectView', that.myProjectViewPayload).then(res => {
-        that.log('myProjectView:', res)
+        that.log('myProjectViewKKKK:', res)
         if (res.code === 200) {
           // for (var i = 0; i < res.data.list.length; i++) {
           //   res.data.list[i].startDate = res.data.list[i].startDate.split(' ')[0]
@@ -188,13 +203,13 @@ export default {
           that.projectViewData = res.data.list
           that.projectState = res.manuData
           that.totalProject = res.data.totalRow
-          that.loading = false
+          that.delLoading = false
           if (res.data.list.length === 0) {
             that.noDataText = '暂无数据'
           }
         } else {
           that.noDataText = ''
-          that.loading = false
+          that.delLoading = false
           this.log('myProjectView:code=>', res.code)
         }
       })
@@ -414,6 +429,7 @@ export default {
   }
   .projectBox{
     width: 100%;
+    min-height: 150px;
     /* margin-left: 2%; */
     padding: 0 10px;
     box-sizing: border-box;

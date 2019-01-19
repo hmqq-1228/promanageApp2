@@ -126,4 +126,18 @@ a{
   transition: border-color .2s cubic-bezier(.645,.045,.355,1);
   width: 100%;
 }
+.selectData.disabled{
+  background-color: #f5f7fa;
+}
+  .proDetailBase .el-input.is-disabled .el-input__inner{
+    color: #606266;
+  }
+  .proDetailBase .el-textarea.is-disabled .el-textarea__inner{
+    color: #606266;
+  }
+  /**
+   * ios下输入框禁用状态字体颜色设置
+   */
+.proDetailBase input:disabled, input[disabled]{ color:#606266; -webkit-text-fill-color:#606266; -webkit-opacity:1; opacity: 1;}
+.proDetailBase textarea:disabled, textarea[disabled]{ color:#606266; -webkit-text-fill-color:#606266; -webkit-opacity:1; opacity: 1;}
 </style>

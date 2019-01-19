@@ -75,6 +75,7 @@ export default {
   created: function () {
     // var that = this
     // this.$store.commit('setRouterName', {name: '项目历史记录', parentName: 'proDetails', url: '/proDetails/' + that.$route.params.pid})
+    this.$store.commit('currentTabSet', 'ProDetailHistory')
     this.getHistoryCont()
     this.settoken()
     // if (this.dialogFormVisible === false) {
